@@ -12,7 +12,10 @@ public class SpawnPoint : MonoBehaviour
     }
     IEnumerator SpawnEnemyEveryX()
     {
-        yield return new WaitForSeconds(spawnRate);
-        Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        while (true)
+        {
+            yield return new WaitForSeconds(spawnRate);
+            Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        }
     }
 }

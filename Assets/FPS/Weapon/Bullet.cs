@@ -57,6 +57,7 @@ public class Bullet : MonoBehaviour
         // Встановлюємо швидкість проєктиля
         rb.velocity = direction * projectileSpeed;
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))

@@ -14,7 +14,7 @@ public class EnemyMov : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        playerObj = GameObject.Find("Player");
+        playerObj = GameObject.Find("Core");
         player = playerObj.GetComponent<Transform>();
     }
 

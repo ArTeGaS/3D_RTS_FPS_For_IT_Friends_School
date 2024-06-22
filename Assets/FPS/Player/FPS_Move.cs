@@ -11,15 +11,22 @@ public class FPS_Move : MonoBehaviour
     private Rigidbody rb;
     private float xRotation = 0f;
 
+    private float sprintSpeed;
+
+    public GameObject weapon;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
+
+        sprintSpeed = moveSpeed * 2f;
     }
 
     void Update()
     {
         LookAround();
+        GameMode();
     }
 
     void FixedUpdate()
@@ -45,6 +52,24 @@ public class FPS_Move : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 movement = transform.right * moveX + transform.forward * moveZ;
-        rb.velocity = movement * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+        if (Input.GetKey(KeyCode.Space) && rb.velocity.y == 0)
+        {
+            rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        }
+        else if (Input.GetKey(KeyCode.LeftShift))
+        {
+            rb.velocity = movement * sprintSpeed + new Vector3(0, rb.velocity.y, 0);
+        }
+        else
+        {
+            rb.velocity = movement * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+        }
+    }
+    void GameMode()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            weapon.SetActive(!weapon.activeSelf);
+        }
     }
 }

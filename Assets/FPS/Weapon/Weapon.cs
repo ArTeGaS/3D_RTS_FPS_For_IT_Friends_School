@@ -17,6 +17,7 @@ public class Weapon : MonoBehaviour
     public Transform spawnPoint;
 
     public GameObject crosshair;
+    public GameObject flash;
 
     public static bool scoped = false;
     private void Start()
@@ -42,7 +43,24 @@ public class Weapon : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+            // Отримуємо камеру гравця
+            Camera playerCamera = Camera.main;
+
+            // Напрямок руху проєктиля відповідає напрямку погляду камери
+            Vector3 cameraDirection = playerCamera.transform.forward;
+
+            // Визначаємо напрямок руху проєктиля від позиції зброї
+            Vector3 direction = cameraDirection.normalized;
+
+            RaycastHit hit;
+            if (Physics.Raycast(spawnPoint.position, direction, out hit, 20000f))
+            {
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    Destroy(hit.collider.gameObject);
+                }
+            }
+            Instantiate(flash, spawnPoint.position, Quaternion.LookRotation(direction));
         }
     }
 }
