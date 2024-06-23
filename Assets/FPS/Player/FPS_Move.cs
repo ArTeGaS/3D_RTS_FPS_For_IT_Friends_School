@@ -5,6 +5,7 @@ using UnityEngine;
 public class FPS_Move : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
+    public float jumpForce = 7.5f;
     public float mouseSensitivity = 100.0f;
     public Transform playerCamera;
 
@@ -20,7 +21,7 @@ public class FPS_Move : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
 
-        sprintSpeed = moveSpeed * 2f;
+        sprintSpeed = moveSpeed * 1.5f;
     }
 
     void Update()
@@ -54,7 +55,7 @@ public class FPS_Move : MonoBehaviour
         Vector3 movement = transform.right * moveX + transform.forward * moveZ;
         if (Input.GetKey(KeyCode.Space) && rb.velocity.y == 0)
         {
-            rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
         else if (Input.GetKey(KeyCode.LeftShift))
         {
