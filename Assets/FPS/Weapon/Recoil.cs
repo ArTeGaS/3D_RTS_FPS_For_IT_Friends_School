@@ -9,6 +9,7 @@ public class Recoil : MonoBehaviour
     public float recoilAngle = 5f; // Кут віддачі вниз
     public float recoilSpeed = 0.1f; // Швидкість віддачі
     public float returnSpeed = 0.1f; // Швидкість повернення
+    public float recoilCompensation = 0.02f; // Компенсація підйому зброї
 
     private Vector3 initialPosition;
     private Quaternion initialRotation;
@@ -19,7 +20,7 @@ public class Recoil : MonoBehaviour
     {
         initialPosition = weaponTransform.localPosition;
         initialRotation = weaponTransform.localRotation;
-        initialPosScoped = new Vector3(0, -0.158f, 0.9f);
+        initialPosScoped = new Vector3(0, -0.182f, 0.9f);
     }
 
     void Update()
@@ -37,7 +38,7 @@ public class Recoil : MonoBehaviour
     IEnumerator WeaponRecoil()
     {
         // Віддача
-        Vector3 recoilPosition = initialPosition + Vector3.back * recoilDistance;
+        Vector3 recoilPosition = initialPosition + Vector3.back * recoilDistance + Vector3.down * recoilCompensation;
         Quaternion recoilRotation = initialRotation * Quaternion.Euler(-recoilAngle, 0, 0);
 
         float elapsedTime = 0f;
@@ -72,7 +73,7 @@ public class Recoil : MonoBehaviour
     IEnumerator WeaponRecoilScoped()
     {
         // Віддача
-        Vector3 recoilPosition = initialPosScoped + Vector3.back * recoilDistance;
+        Vector3 recoilPosition = initialPosScoped + Vector3.back * recoilDistance + Vector3.down * recoilCompensation;
         Quaternion recoilRotation = initialRotation * Quaternion.Euler(-recoilAngle, 0, 0);
 
         float elapsedTime = 0f;
