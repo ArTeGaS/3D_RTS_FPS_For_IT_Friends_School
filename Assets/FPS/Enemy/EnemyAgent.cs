@@ -5,29 +5,26 @@ using UnityEngine.AI;
 
 public class EnemyAgent : MonoBehaviour
 {
-    private GameObject playerObj;
-    private Transform player;
+    public string targetName;
+
+    private GameObject target;
     private NavMeshAgent agent; // Змінна для компонента NavMeshAgent
 
     private void Start()
     {
-        playerObj = GameObject.Find("Player");
-        player = playerObj.GetComponent<Transform>();
+        target = GameObject.Find(targetName);
         agent = GetComponent<NavMeshAgent>(); // Отримання компонента NavMeshAgent
-    }
-
-    void Update()
-    {
-        if (player != null)
+        if (target != null)
         {
-            agent.SetDestination(player.position); // Встановлення кінцевої точки маршруту для NavMeshAgent
+            agent.SetDestination(target.transform.position); // Встановлення кінцевої точки маршруту для NavMeshAgent
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform == player)
+        if (collision.transform == target)
         {
+            Debug.Log("Core are in danger!");
             StartCoroutine(StopMoving());
         }
     }

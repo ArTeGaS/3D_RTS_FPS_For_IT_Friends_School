@@ -35,7 +35,7 @@ public class Weapon : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse1))
         {
             scoped = true;
-            //Camera.main.fieldOfView = 45f;
+            Camera.main.fieldOfView = 45f;
 
             crosshair.SetActive(false);
             weaponTransform.localPosition = new Vector3(newXPos, newYPos, newZPos);
@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
         {
             scoped = false;
 
-            //Camera.main.fieldOfView = 60f;
+            Camera.main.fieldOfView = 60f;
             crosshair.SetActive(true);
             weaponTransform.localPosition = new Vector3(xPosBase, yPosBase, zPosBase);
         }
