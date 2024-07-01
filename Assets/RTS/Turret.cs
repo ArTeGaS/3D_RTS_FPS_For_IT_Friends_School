@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Turret : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Turret : MonoBehaviour
     public Transform turretBarrel; // Ствол турелі
     
     public float rotationSpeed = 5f; // Швидкість обертання
+    public float tiltAngle = 30f; // Максимальний кут нахилу
 
     private Transform enemy; // Ціль ворога
     private List<GameObject> enemiesInRange;
@@ -38,18 +40,31 @@ public class Turret : MonoBehaviour
         }
         if (enemy != null)
         {
-            // Обертання платформи по горизонталі
-            Vector3 directionToEnemy = enemy.position - turretBase.position;
-            directionToEnemy.y = 0; // Ігноруємо вертикальну компоненту
-            Quaternion targetRotationBase = Quaternion.LookRotation(directionToEnemy);
-            turretBase.rotation = Quaternion.Slerp(turretBase.rotation, targetRotationBase, rotationSpeed * Time.deltaTime);
+            BarrelAndPlatformRotation();
+        }
 
-            // Обертання ствола по вертикалі
-            Vector3 directionToEnemyBarrel = enemy.position - turretBarrel.position;
-            Quaternion targetRotationBarrel = Quaternion.LookRotation(directionToEnemyBarrel);
-            Vector3 barrelEulerAngles = targetRotationBarrel.eulerAngles;
-            barrelEulerAngles.y = turretBarrel.localEulerAngles.y; // Зберігаємо поточну горизонтальну орієнтацію
-            turretBarrel.localEulerAngles = Vector3.Slerp(turretBarrel.localEulerAngles, barrelEulerAngles, rotationSpeed * Time.deltaTime);
+        void BarrelAndPlatformRotation()
+        {
+            // Отримуємо напрямок від ствола до цілі
+            Vector3 barrelDirection = enemy.position - turretBarrel.position;
+
+            // Обчислюємо обертання в напрямку цілі
+            Quaternion rotation = Quaternion.LookRotation(barrelDirection);
+
+            // Обмежуємо кут нахилу
+            float angle = Mathf.Clamp(rotation.eulerAngles.x, -tiltAngle, tiltAngle);
+
+            // Створюємо обертання для нахилу ствола, зберігаючи обертання по осі Y
+            Quaternion targetRotation = Quaternion.Euler(angle, rotation.eulerAngles.y, 0);
+
+            // Передаємо кут обертання по осі Y від ствола до платформи
+            transform.rotation = Quaternion.Euler(
+                transform.eulerAngles.x,
+                turretBarrel.eulerAngles.y,
+                transform.eulerAngles.z);
+
+            // Застосовуємо обертання до ствола
+            turretBarrel.localRotation = targetRotation;
         }
     }
 }
