@@ -6,6 +6,7 @@ using UnityEngine.ProBuilder;
 
 public class Flash : MonoBehaviour
 {
+    public float lifeTime = 0.01f;
     private void Start()
     {
         float angle = Random.Range(0, 361);
@@ -17,7 +18,7 @@ public class Flash : MonoBehaviour
     }
     IEnumerator EndLight()
     {
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
 }

@@ -15,7 +15,11 @@ public class Turret : MonoBehaviour
     public float tiltAngle = 30f; // Максимальний кут нахилу
 
     private Transform enemy; // Ціль ворога
+    private EnemyAgent enemyAgent;
     private List<GameObject> enemiesInRange;
+    private Vector3 direction;
+
+    private bool reload = false;
 
     private void Start()
     {
@@ -41,6 +45,12 @@ public class Turret : MonoBehaviour
         if (enemy != null)
         {
             BarrelAndPlatformRotation();
+
+            if (!reload)
+            {
+                Shoot();
+                StartCoroutine(Reload());
+            }
         }
 
         void BarrelAndPlatformRotation()
@@ -66,5 +76,30 @@ public class Turret : MonoBehaviour
             // Застосовуємо обертання до ствола
             turretBarrel.localRotation = targetRotation;
         }
+    }
+    void Shoot()
+    {
+        enemyAgent = enemy.gameObject.GetComponent<EnemyAgent>();
+
+        direction = transform.forward;
+        direction = direction.normalized;
+        Instantiate(flash, spawnPoint.position, Quaternion.LookRotation(direction));
+
+        if (enemy != null && enemyAgent.hitPoints.value > 1)
+        {
+            enemyAgent.hitPoints.value--;
+        }
+        else if (enemy != null && enemyAgent.hitPoints.value <= 1)
+        {
+            enemiesInRange.Remove(enemy.gameObject);
+            Destroy(enemy.gameObject);
+            Debug.Log("TurretHit");
+        }
+    }
+    IEnumerator Reload()
+    {
+        reload = true;
+        yield return new WaitForSeconds(0.2f);
+        reload = false;
     }
 }

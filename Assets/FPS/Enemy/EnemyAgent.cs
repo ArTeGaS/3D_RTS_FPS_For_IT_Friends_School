@@ -2,16 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyAgent : MonoBehaviour
 {
     public string targetName;
+    public Slider hitPoints;
 
     private GameObject target;
     private NavMeshAgent agent; // Змінна для компонента NavMeshAgent
 
     private void Start()
     {
+        hitPoints.value = 5;
+
         target = GameObject.Find(targetName);
         agent = GetComponent<NavMeshAgent>(); // Отримання компонента NavMeshAgent
         if (target != null)

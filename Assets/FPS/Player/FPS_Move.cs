@@ -53,9 +53,14 @@ public class FPS_Move : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 movement = transform.right * moveX + transform.forward * moveZ;
-        if (Input.GetKey(KeyCode.Space) && rb.velocity.y == 0)
+        if (Input.GetKey(KeyCode.Space)) //&& rb.velocity.y == 0
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.velocity = Vector3.up * jumpForce;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            rb.velocity = Vector3.down * jumpForce;
         }
         else if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -63,7 +68,7 @@ public class FPS_Move : MonoBehaviour
         }
         else
         {
-            rb.velocity = movement * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+            rb.velocity = movement * moveSpeed + new Vector3(0, 0, 0); //rb.velocity.y
         }
     }
     void GameMode()

@@ -73,8 +73,16 @@ public class Weapon : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Enemy"))
                 {
-                    Destroy(hit.collider.gameObject);
-                    Debug.Log("Hit");
+                    EnemyAgent enemy = hit.collider.GetComponent<EnemyAgent>();
+                    if (enemy != null && enemy.hitPoints.value > 1)
+                    {
+                        enemy.hitPoints.value--;
+                    }
+                    else if (enemy != null && enemy.hitPoints.value <= 1)
+                    {
+                        Destroy(hit.collider.gameObject);
+                        Debug.Log("Hit");
+                    }
                 }
             }
             Instantiate(flash, spawnPoint.position, Quaternion.LookRotation(direction));
