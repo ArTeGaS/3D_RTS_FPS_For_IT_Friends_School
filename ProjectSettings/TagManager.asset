@@ -9,6 +9,11 @@ TagManager:
   - Structure
   - Ground
   - Projectile
+  - Frame
+  - Foundation
+  - Turret_1
+  - Turret_2
+  - Turret_3
   layers:
   - Default
   - TransparentFX

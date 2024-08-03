@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Turret : MonoBehaviour
 {
@@ -34,10 +33,14 @@ public class Turret : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        enemiesInRange.Remove(other.gameObject);
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            enemiesInRange.Remove(other.gameObject);
+        }
     }
     void Update()
     {
+        enemiesInRange.RemoveAll(enemy => enemy == null);
         if (enemiesInRange.Count > 0)
         {
             enemy = enemiesInRange[0].transform;
@@ -93,7 +96,6 @@ public class Turret : MonoBehaviour
         {
             enemiesInRange.Remove(enemy.gameObject);
             Destroy(enemy.gameObject);
-            Debug.Log("TurretHit");
         }
     }
     IEnumerator Reload()

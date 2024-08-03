@@ -15,6 +15,9 @@ public class FPS_Move : MonoBehaviour
     private float sprintSpeed;
 
     public GameObject weapon;
+    public GameObject buildInterface;
+
+    public string gameMode = "Shooter";
 
     void Start()
     {
@@ -53,10 +56,10 @@ public class FPS_Move : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 movement = transform.right * moveX + transform.forward * moveZ;
-        if (Input.GetKey(KeyCode.Space)) //&& rb.velocity.y == 0
+        if (Input.GetKey(KeyCode.Space) && rb.velocity.y == 0) //&& rb.velocity.y == 0
         {
-            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            rb.velocity = Vector3.up * jumpForce;
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //rb.velocity = Vector3.up * jumpForce;
         }
         else if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -68,7 +71,7 @@ public class FPS_Move : MonoBehaviour
         }
         else
         {
-            rb.velocity = movement * moveSpeed + new Vector3(0, 0, 0); //rb.velocity.y
+            rb.velocity = movement * moveSpeed + new Vector3(0, rb.velocity.y, 0); //rb.velocity.y
         }
     }
     void GameMode()
@@ -76,6 +79,18 @@ public class FPS_Move : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             weapon.SetActive(!weapon.activeSelf);
+            buildInterface.SetActive(!buildInterface.activeSelf);
+            switch (gameMode)
+            {
+                case "Shooter":
+                    gameMode = "Builder";
+                    Debug.Log("Builder Mode");
+                    break;
+                case "Builder":
+                    gameMode = "Shooter";
+                    Debug.Log("Shooter Mode");
+                    break;
+            }
         }
     }
 }

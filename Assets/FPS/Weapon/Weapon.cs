@@ -22,6 +22,9 @@ public class Weapon : MonoBehaviour
     public static bool scoped = false;
 
     private Camera playerCamera;
+    private float normalFOV = 60f;
+    private float scopedFOV = 45f;
+
     private void Start()
     {
         playerCamera = Camera.main;
@@ -30,12 +33,19 @@ public class Weapon : MonoBehaviour
         yPosBase = transform.localPosition.y;
         zPosBase = transform.localPosition.z;
     }
+
     void Update()
+    {
+        HandleAiming();
+        HandleShooting();
+    }
+
+    void HandleAiming()
     {
         if (Input.GetKey(KeyCode.Mouse1))
         {
             scoped = true;
-            Camera.main.fieldOfView = 45f;
+            playerCamera.fieldOfView = scopedFOV;
 
             crosshair.SetActive(false);
             weaponTransform.localPosition = new Vector3(newXPos, newYPos, newZPos);
@@ -43,30 +53,18 @@ public class Weapon : MonoBehaviour
         else
         {
             scoped = false;
-
-            Camera.main.fieldOfView = 60f;
+            playerCamera.fieldOfView = normalFOV;
             crosshair.SetActive(true);
             weaponTransform.localPosition = new Vector3(xPosBase, yPosBase, zPosBase);
         }
+    }
+
+    void HandleShooting()
+    {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            // Напрямок руху проєктиля відповідає напрямку погляду камери
-            Vector3 cameraDirection = playerCamera.transform.forward;
-
-            // Визначаємо напрямок руху проєктиля від позиції зброї
-            Vector3 direction = cameraDirection.normalized;
-
-            if (!scoped)
-            {
-
-            }
-            else if (scoped)
-            {
-
-            }
-            
-
-            Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+            // Зміна напрямку для рейкасту з урахуванням прицілу
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 20000f))
@@ -85,7 +83,9 @@ public class Weapon : MonoBehaviour
                     }
                 }
             }
-            Instantiate(flash, spawnPoint.position, Quaternion.LookRotation(direction));
+
+            // Ефект пострілу
+            Instantiate(flash, spawnPoint.position, Quaternion.LookRotation(playerCamera.transform.forward));
         }
     }
 }
